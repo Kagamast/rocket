@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />    <title>Rocket voyage - name in progress</title>
+    <link rel="icon" type="image/x-icon" href="favicon.png">
+<style>
+:root{
+    --light-contrast-color: #007FC9;
+    --transparent-light-contrast-color: #007fc985;
+    --textcolor: #307cff;
+    --darktextcolor: #1168ff;
+    --grey: #333333;
+}
+body{
+    display: grid;
+    color: var(--textcolor);
+    height: 100%;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background-color: #1b1b1b;
+    grid-template-areas:
+    "a a"
+    "b c";
+    grid-template-columns: 90vw 10vw;
+    grid-template-rows: 10vh 90vh;
+}
+.material-symbols-outlined {
+  font-variation-settings:
+  'FILL' 0,
+  'wght' 400,
+  'GRAD' 0,
+  'opsz' 48
+}
+#rocket{
+    position: absolute;
+    bottom: 50%;
+    left: 63px;
+    width: 100px;
+    z-index: 100;
+    transform: translate(-50%, 50%);
+}
+#finish{
+    position: absolute;
+    right: 0;
+    bottom: 50%;
+    width: 20px;
+    height: 100px;
+    z-index: 99;
+    background-image: linear-gradient(black 50%, white 50%), linear-gradient(white 50%, black 50%);
+    background-size: 50% 20px;
+    background-repeat: repeat-y;
+    background-position: right, left;
+    transform: translate(0, 50%);
+    transition: bottom 200ms;
+}
+.dot{
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    border-radius: 100%;
+    background-color: #333;
+    transition: bottom 200ms;
+}
+#source{
+    overflow: hidden;
+    position: relative;
+    background-color: #0e0e0e;
+    grid-area: b;
+}
+.top{
+    grid-area: a;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    font-family: 'Montserrat', sans-serif;
+}
+.top form{
+    color: var(--light-contrast-color);
+    font-size: 5vh;
+}
+.top label{
+    margin: 10px;
+}
+.top label:not(.unit, :first-child){
+    margin-left: -1.3em;
+   
+}
+.top input{
+    font-family: monospace;
+    background-color: transparent;
+    border: 2px solid var(--light-contrast-color);
+    border-radius: 5px;
+    height: 8vh;
+    margin-top: 0.5vh;
+    font-size: 5vh;
+    color: var(--light-contrast-color);
+    width: 3em;
+    text-align: right;
+    line-height: 10vh;
+}
+.hasUnits{
+    padding-right: 1em;
+}
+.unit{
+    position: relative;
+    right: 1.3em;
+}
+.top input:focus{
+    border-color: #333333;
+}
+.topRightNav{
+    float: right;
+    height: 100%;
+}
+.topRightNav button{
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 9vh;
+    color: var(--light-contrast-color);
+    background-color: transparent;
+    border-style: none;
+    background-image: radial-gradient(#1168ff97, transparent 300%);
+    background-size: 0px 0px;
+    background-repeat: no-repeat;
+    transition: background-size 0.1s;
+    background-position: 50% 50%;
+}
+.topRightNav button:hover{
+    background-size: 100% 100%;
+}
+.side{
+    grid-area: c;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr;
+    gap: 5px;
+    margin: 5px;
+}
+.sideItems{
+    border: 3px solid var(--light-contrast-color);
+    border-radius: 10px;
+    width: 100%;
+    position: relative;
+    transition: box-shadow 150ms;
+}
+.sideItems:hover{
+    box-shadow: 0 0 20px 5px var(--transparent-light-contrast-color) inset;
+}
+.sideItems div{
+    position: absolute;
+    top: 10px;
+    left: 50%;
+}
+.sideItems span{
+    position: absolute;
+    bottom: 0;
+    color: white;
+    text-align: center;
+    width: 100%;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 22px;
+}
+.sideItems.selected{
+    box-shadow: 0 0 700px 5px var(--transparent-light-contrast-color) inset;
+}
+.planet{
+    position: absolute;
+    height: 80px;
+    width: 80px;
+    margin-bottom: -40px;
+    margin-left: -40px;
+    background-color: rgb(255, 111, 0);
+    background-image: linear-gradient(350deg, transparent 40%, #fff4 40%, #fff4 70%, transparent 70%);
+    border-radius: 100%;
+}
+.star{
+    position: absolute;
+    height: 100px;
+    width: 100px;
+    margin-bottom: -50px;
+    margin-left: -50px;
+    background-color: #fff;
+    box-shadow: 0 0 20px white;
+    border-radius: 100%;
+}
+.blackHole{
+    position: absolute;
+    height: 100px;
+    width: 100px;
+    margin-bottom: -50px;
+    margin-left: -50px;
+    background-color: #000;
+    box-shadow: 0 0 20px #000;
+    border-radius: 100%;
+}
+.wallIcon{
+    transform: translate(-50%, 0);
+    height: 100px;
+    width: 100px;
+    background-image: linear-gradient(#FF7038 51%, transparent 51%), linear-gradient(#FF530F 50%, transparent 50%);
+    background-size: 75% 50%;
+    background-position: 0% 0%, 100% 50%;
+    background-repeat: repeat-y;
+}
+#menuPanel{
+    position: relative;
+    z-index: 2000;
+    display: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 70px;
+    text-align: center;
+    position: fixed;
+    z-index: 1000;
+    background-color: #000b;
+    box-shadow: -1px -1px 3px -2px #fff7, 5px 5px 5px 0px #0004;
+    min-width: 100px;
+    min-height: 100px;
+    left: 50vw;
+    top: 50vh;
+    transform: translate(-50%, -50%);
+    color: white;
+    padding: 30px;
+    border-radius: 40px;
+    animation: slideIn 0.5s ease-out 0s forwards;
+    opacity: 1;
+    backdrop-filter: blur(5px);
+}
+#closeButton{
+    position: absolute;
+    top: 0.5em;
+    right: 0.5em;
+    font-size: 40px;
+    padding: 0;
+    width: 1em;
+    height: 1em;
+    border-style: none;
+    border-radius: 100vmax;
+    background-color: #ff8a6a;
+    transition: background-color 0.2s;
+}
+#closeButton:hover{
+    background-color: #ff3700;
+}
+#menuPanel h3{
+    margin: 0;
+}
+#menuPanel label{
+    font-weight: 100;
+    font-size: 50px;
+    color: var(--light-contrast-color);
+}
+#menuPanel select, button:not(.topRightButton){
+    background-color: transparent;
+    font-size: 50px;
+    color: var(--light-contrast-color);
+    font-family: 'Montserrat', sans-serif;
+    border-radius: 0.3em;
+    border: 2px solid;
+    position: relative;
+    top: 0;
+    right: 0;
+    transition: 0.2s;
+}
+#menuPanel option{
+    background-color: var(--grey);
+}
+.clearCanvas:hover{
+    background-color: #ff3700;
+    color: white;
+    border-color: transparent;
+    top: -5px;
+    right: -3px;
+    box-shadow: -3px 5px 0 0 #ff8a6a;
+}
+.wall{
+    position: absolute;
+    background-color: #db4d19;
+    box-shadow: 0 0 2px #000;
+    z-index: 2;
+}
+#prototypeWall{
+    position: absolute;
+    z-index: 3;
+    background-color: #fd4907;
+    display: none;
+}
+@keyframes slideIn {
+    from{opacity: 0;}
+    to{opacity: 1;}
+}
+</style>
+</head>
+
+
+
+
+<body id="body">
+    <div class="top">
+        <form action="">
+            <label for="">position x:</label><input class="hasUnits" name="posX" id="posX" type="number" min="0" max="100" value="0"><label for="" class="unit">%</label>
+            <label for="">position y:</label><input class="hasUnits" name="posY" id="posY" type="number" min="0" max="100" value="0"><label for="" class="unit">%</label>
+            <label for="">weight:</label><input name="weight" id="weight" type="number" min="0" max="20" value="0">
+        </form>
+        <div class="topRightNav">
+            <abbr title="open settings"><button onclick="toggleDisplay(menuPanel)" class="material-symbols-outlined topRightButton">settings</button></abbr>
+            <abbr title="copy link"><button onclick="navigator.clipboard.writeText(generateURL())" class="material-symbols-outlined topRightButton">content_copy</button></abbr>
+            <abbr title="run level"><button onclick="window.open(generateURL(),'_blank');" class="material-symbols-outlined topRightButton">play_arrow</button></abbr>
+        </div>
+    </div>
+    <div class="side">
+        <div class="sideItems" onclick="selectMe(0)">
+            <div class="blackHole"></div>
+            <span>black hole</span>
+        </div>
+        <div class="sideItems" onclick="selectMe(1)">
+            <div class="star"></div>
+            <span>star</span>
+        </div>
+        <div class="sideItems" onclick="selectMe(2)">
+            <div class="planet"></div>
+            <span>planet</span>
+        </div>
+        <div class="sideItems" onclick="selectMe(3)">
+            <div class="wallIcon"></div>
+            <span>wall</span>
+        </div>
+    </div>
+    <div id="wallContainer"></div>
+    <div id="source">
+        <img src="gameImages/rocket.png" alt="rocket" id="rocket">
+        <div id="finish"></div>
+    </div>
+        <div id="prototypeWall"></div>
+    <div id="menuPanel">
+        <button id="closeButton" onclick="toggleDisplay(menuPanel);" class="material-symbols-outlined topRightButton">close</button>
+        <h3 id="menuTitle">settings</h3>
+        <form action="" class="settings">
+            <label for="modeSelector">mode: </label><select name="" id="modeSelector"><option value="0">additive</option><option value="1">subtractive</option></select><br>
+            <button type="button" onclick="clearCanvas()" class="clearCanvas">clear canvas</button>
+        </form>
+    </div>
+</body>
+
+
+
+
+<script>
+let openedSettings = false;
+let buildingWall = false;
+let mode = 0;
+let objectTypeSelector = [null, "blackHole", "star", "planet", "wall"];
+let objects = [];
+let wallList = [];
+let selectedObject = null;
+let selectedObjectType = 0;
+let prototypeWallCoordinates = [0, 0];
+let prototypeWall = document.getElementById("prototypeWall")
+let objectContainer = document.getElementById("source");
+let wallContainer = document.getElementById("wallContainer");
+let spaceObject = document.getElementsByClassName("spaceObject");
+let sideItems = document.getElementsByClassName("sideItems");
+let inputPosX = document.getElementById("posX");
+let inputPosY = document.getElementById("posY");
+let inputWeight = document.getElementById("weight");
+let menuPanel = document.getElementById("menuPanel");
+let displayWall = document.getElementsByClassName("wall");
+const printSomething = function printSomething(){console.log("something")}
+
+
+
+window.addEventListener('mousedown', (e) => {
+    if(e.clientX < window.innerWidth * 0.9 && e.clientY > window.innerHeight * 0.1){
+        if(0 < selectedObjectType && selectedObjectType <4 && !openedSettings){
+            selectedObject = spaceObject.length;
+            objectContainer.innerHTML += "<div class='spaceObject " + objectTypeSelector[selectedObjectType] + "' onclick='selectObject(" + spaceObject.length + ")'></div>";
+            spaceObject[spaceObject.length -1].style.left = posXtoAbsolute(parseInt(posXtoPercent(e.clientX))) + "px";
+            spaceObject[spaceObject.length -1].style.bottom = posYtoAbsolute(parseInt(posYtoPercent(e.clientY))) + "px";
+            let currentObject = [];
+            currentObject[0] = selectedObjectType == 1 ? 20 : selectedObjectType == 2 ? 3 : selectedObjectType == 3 ? 1 : 0; //weight
+            inputWeight.value = parseInt(currentObject[0])
+            currentObject[1] = posXtoPercent(e.clientX)  //posX
+            inputPosX.value = parseInt(currentObject[1])
+            currentObject[2] = posYtoPercent(e.clientY)  //posY
+            inputPosY.value = parseInt(currentObject[2])
+            currentObject[3] = objectTypeSelector[selectedObjectType];
+            objects.push(currentObject);
+        }
+        if(selectedObjectType == 4 && !openedSettings){
+            buildingWall = true;
+            prototypeWall.style.display = "block";
+            prototypeWall.style.left = posXtoAbsolute(parseInt(posXtoPercent(e.clientX))) + "px";
+            prototypeWallCoordinates[0] = posXtoAbsolute(parseInt(posXtoPercent(e.clientX)));
+            prototypeWall.style.bottom = posYtoAbsolute(parseInt(posYtoPercent(e.clientY))) + "px";
+            prototypeWallCoordinates[1] = posYtoAbsolute(parseInt(posYtoPercent(e.clientY)));
+            prototypeWall.style.width = "1vw"
+            prototypeWall.style.height = "1vh"
+            console.log(prototypeWall)
+        }
+    }
+})
+window.addEventListener('mousemove', (e) => {
+    if(buildingWall){
+        let distanceLeft = Math.min(e.clientX, prototypeWallCoordinates[0]);
+        let distanceBottom = window.innerHeight - Math.min(window.innerHeight - e.clientY, prototypeWallCoordinates[1]);
+        let width = Math.max(e.clientX, prototypeWallCoordinates[0]) - Math.min(e.clientX, prototypeWallCoordinates[0]);
+        let height = Math.max(window.innerHeight - e.clientY, prototypeWallCoordinates[1]) - Math.min(window.innerHeight - e.clientY, prototypeWallCoordinates[1]);
+        //console.log(Math.max(window.innerHeight - e.clientY, prototypeWallCoordinates[1]) + "\n", Math.min(window.innerHeight - e.clientY, prototypeWallCoordinates[1]),"height:" + height)
+        prototypeWall.style.width = posXtoAbsolute(parseInt(posXtoPercent(width))) + "px";
+        prototypeWall.style.height = posYtoAbsolute(parseInt(posYtoPercent(window.innerHeight - height))) + "px";
+        prototypeWall.style.left = posXtoAbsolute(parseInt(posXtoPercent(distanceLeft))) + "px";
+        prototypeWall.style.bottom = posYtoAbsolute(parseInt(posYtoPercent(distanceBottom))) + "px";
+    }
+})
+window.addEventListener('mouseup', (e) => {
+    if(buildingWall){
+        buildingWall = false;
+        prototypeWall.style.display = "none";
+        buildWall(
+            posXtoAbsolute(parseInt(posXtoPercent(prototypeWallCoordinates[0]))),
+            posYtoAbsolute(parseInt(posYtoPercent(window.innerHeight - prototypeWallCoordinates[1]))),
+            posXtoAbsolute(parseInt(posXtoPercent(e.clientX))),
+            posYtoAbsolute(parseInt(posYtoPercent(e.clientY)))
+        );
+    }
+})
+window.addEventListener('input', (e) => {
+    if(selectedObject != null){
+        spaceObject[selectedObject].style.left = posXtoAbsolute(inputPosX.value) +"px";
+        objects[selectedObject][1] = inputPosX.value;
+        spaceObject[selectedObject].style.bottom = posYtoAbsolute(inputPosY.value) +"px";
+        objects[selectedObject][2] = inputPosY.value;
+        objects[selectedObject][0] = inputWeight.value;
+    }
+    mode = document.getElementById("modeSelector").selectedIndex
+    console.log(mode)
+});
+
+
+
+const posXtoPercent = (x) => ((window.innerWidth * 0.9) - x) / (window.innerWidth * 0.9) * -100 + 100;
+const posYtoPercent = (y) => (y - (window.innerHeight * 0.1)) / (window.innerHeight * 0.9) * -100 +100;
+const reversePosYtoPercent = (y) => ((y - 100) / -100) * window.innerHeight * 0.9 + (window.innerHeight * 0.1);
+const posXtoAbsolute = (x) => x * ((window.innerWidth * 0.9) / 100);
+const posYtoAbsolute = (y) => y * ((window.innerHeight * 0.9) / 100);
+function selectMe(order){
+    for(let i = 0; i< sideItems.length; ++i){
+        if(i != order){
+            sideItems[i].classList.remove("selected");
+        }
+    }
+    if(!sideItems[order].classList.contains("selected")){
+        selectedObjectType = order + 1
+    }else{
+        selectedObjectType = 0;
+    }
+    sideItems[order].classList.toggle("selected");
+}
+function selectObject(order){
+    if(mode == 0){
+        selectedObject = order;
+        inputPosX.value = parseInt(objects[selectedObject][1]);
+        inputPosY.value = parseInt(objects[selectedObject][2]);
+        inputWeight.value = objects[selectedObject][0];
+    }else{
+        spaceObject[order].style.display = "none";
+        objects[order] = [];
+        inputPosX.value = 0;
+        inputPosY.value = 0;
+        inputWeight.value = 0;
+        selectedObject = null;
+    }
+}
+function buildWall(positionX1, positionY1, positionX2, positionY2){
+    wallContainer.innerHTML += "<div class=\"wall\" onclick=\"deleteWall(" + displayWall.length +")\"></div>";
+    left = Math.min(positionX1, positionX2);
+    bottom = Math.min(positionY1, positionY2);
+    width = Math.max(positionX1, positionX2) - Math.min(positionX1, positionX2);
+    height = Math.max(positionY1, positionY2) - Math.min(positionY1, positionY2);
+    displayWall[displayWall.length - 1].style.left = left + "px";
+    displayWall[displayWall.length - 1].style.bottom = bottom + "px";
+    displayWall[displayWall.length - 1].style.width = width + "px";
+    displayWall[displayWall.length - 1].style.height = height + "px";
+    console.table([left, bottom, width, height])
+    left = posXtoPercent(left);
+    bottom = (bottom / (window.innerHeight * 0.9)) * 100;
+    width = posXtoPercent(width);
+    height = (height /( window.innerHeight * 0.9)) * 100;
+    wallList.push([left, bottom, width, height]);
+    console.table([left, bottom, width, height])
+}
+function deleteWall(order){
+    if(mode == 1){
+        wallList[order] = []
+        displayWall[order].style.display = "none"
+    }
+}
+function clearCanvas(){
+    objectContainer.innerHTML = "<img src=\"gameImages/rocket.png\" alt=\"rocket\" id=\"rocket\"><div id=\"finish\"></div>";
+    objects = [];
+    wallContainer.innerHTML= "";
+    wallList = [];
+    inputPosX.value = 0;
+    inputPosY.value = 0;
+    inputWeight.value = 0;
+    selectedObject = null;
+}
+function toggleDisplay(element){
+    if(openedSettings){
+        element.style.display = 'none'
+        openedSettings = false;
+    }else{
+        element.style.display = 'block'
+        openedSettings = true;
+    }
+}
+function generateURL(){
+    let finalURL = "https://lab.kagamast.life/rocket/generated.php?objects="
+    for(let i in objects){
+        if(objects[i].length == 4){
+            finalURL += "|" + objects[i][0] + ",";
+            finalURL += "pw" + parseInt(objects[i][1]) + ",";
+            finalURL += "ph" + parseInt(objects[i][2]) + ",";
+            finalURL += "\"" + objects[i][3] + "\"";
+        }
+    }
+    finalURL += "&walls="
+    for(let i in wallList){
+        if(wallList[i].length == 4){
+            finalURL += "|pw" + parseInt(wallList[i][0]) + ",";
+            finalURL += "ph" + parseInt(wallList[i][1]) + ",";
+            finalURL += "pw" + (parseInt(wallList[i][2]) + parseInt(wallList[i][0])) + ",";
+            finalURL += "ph" + (parseInt(wallList[i][3]) + parseInt(wallList[i][1]));
+            console.table([parseInt(wallList[i][0]), parseInt(wallList[i][1]), parseInt(wallList[i][2]), parseInt(wallList[i][3])])
+        }
+    }
+    return finalURL;
+}
+</script>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+:root{
+    --counter-color: #00d5ff;
+}
+#display{
+    display: grid;
+    grid-template-columns: 4fr 4fr 1fr 4fr 4fr;
+    gap: 10px;
+    width: fit-content;
+}
+.displayDigit{
+   height: 50vh;
+}
+        </style>
+    </head>
+    <body>
+        <form action="">
+            <input id="minutes" type="number" min="0" max="60" value="0">
+            <input id="seconds" type="number" min="0" max="59" value="0">
+            <button type="button" onclick="alignNumbers()">do it</button>
+        </form>
+        <div id="display">
+            <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 14" class="sevenDigit displayDigit"></svg>
+            <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 14"class="sevenDigit displayDigit"></svg>
+            <svg  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 14" class="colon displayDigit">
+                <path d="M 0 4 L 1 3 L 2 4 L 1 5 Z M 1 9 L 2 10 L 1 11 L 0 10 L 1 9 Z" fill="var(--counter-color)"/>
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 14" class="sevenDigit displayDigit"></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 14"class="sevenDigit displayDigit"></svg>
+        </div>
+    </body>
+<script>
+let sevenDigit = document.getElementsByClassName("sevenDigit");
+let sevenSegment = [
+    "yyyyyyn", //0
+    "nyynnnn", //1
+    "yynyyny", //2
+    "yyyynny", //3
+    "nyynnyy", //4
+    "ynyynyy", //5
+    "ynyyyyy", //6
+    "yyynnnn", //7
+    "yyyyyyy", //8
+    "yyyynyy", //9
+]
+function generateNumber(key){
+    let content = "<path d=\"";
+    content += key[0] == "y" ? "M 1 1 L 2 0 L 6 0 L 7 1 L 6 2 L 2 2 Z " : "";
+    content += key[1] == "y" ? "M 7 1 L 8 2 L 8 6 L 7 7 L 6 6 L 6 2 Z " : "";
+    content += key[2] == "y" ? "M 7 7 L 8 8 L 8 12 L 7 13 L 6 12 L 6 8 L 7 7 " : "";
+    content += key[3] == "y" ? "M 7 13 L 6 14 L 2 14 L 1 13 L 2 12 L 6 12 Z " : "";
+    content += key[4] == "y" ? "M 1 13 L 0 12 L 0 8 L 1 7 L 2 8 L 2 12 Z " : "";
+    content += key[5] == "y" ? "M 1 7 L 0 6 L 0 2 L 1 1 L 2 2 L 2 6 Z " : "";
+    content += key[6] == "y" ? "M 7 7 L 6 8 L 2 8 L 1 7 L 2 6 L 6 6 Z" : "";
+    content += "\" fill=\"var(--counter-color)\"/>";
+    return content
+}
+sevenDigit[0].innerHTML = generateNumber(sevenSegment[0]);
+sevenDigit[1].innerHTML = generateNumber(sevenSegment[0]);
+sevenDigit[2].innerHTML = generateNumber(sevenSegment[0]);
+sevenDigit[3].innerHTML = generateNumber(sevenSegment[0]);
+function alignNumbers(){
+    try{
+        clearInterval(aligningNumbers);
+    }catch{}
+    let digit = [
+        parseInt(document.getElementById("minutes").value / 10),
+        parseInt(document.getElementById("minutes").value % 10),
+        parseInt(document.getElementById("seconds").value / 10),
+        parseInt(document.getElementById("seconds").value % 10),
+    ];
+    let seconds = 0;
+    let minutes = 0;
+    const aligningNumbers = setInterval(function(){
+        if(seconds > 59){
+            seconds = 0;
+            ++minutes;
+        }
+        sevenDigit[0].innerHTML = generateNumber(sevenSegment[parseInt(minutes / 10)]);
+        sevenDigit[1].innerHTML = generateNumber(sevenSegment[parseInt(minutes % 10)]);
+        sevenDigit[2].innerHTML = generateNumber(sevenSegment[parseInt(seconds / 10)]);
+        sevenDigit[3].innerHTML = generateNumber(sevenSegment[parseInt(seconds % 10)]);
+        ++seconds;
+        if(minutes > 59){
+            sevenDigit[0].innerHTML = generateNumber("nnnyyyn");
+            sevenDigit[1].innerHTML = generateNumber("yyyyyyn");
+            sevenDigit[2].innerHTML = generateNumber("yyynyyn");
+            sevenDigit[3].innerHTML = generateNumber("ynyyyyn");
+            clearInterval(aligningNumbers);
+        }
+        if(minutes == document.getElementById("minutes").value && seconds == document.getElementById("seconds").value){
+            clearInterval(aligningNumbers);
+        }
+    }, 4)
+}
+    </script>
+</html>
