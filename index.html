@@ -72,6 +72,7 @@ body{
     background-color: rgb(255, 111, 0);
     background-image: linear-gradient(350deg, transparent 40%, #fff4 40%, #fff4 70%, transparent 70%);
     border-radius: 100%;
+    transition: left 0.5s;
 }
 .star{
     position: absolute;
@@ -202,6 +203,7 @@ body{
 
 
 <body id="body">
+<div id="backgroundSpace"></div>
 <img src="gameImages/rocket.png" alt="rocket" id="rocket">
 <div id="finish"></div>
 <div id="dotContainer">
@@ -244,6 +246,9 @@ let cardOrder = 0;
 finish.style.bottom = calcRocketPosition(window.innerWidth + (cardOrder /6) * window.innerWidth) + "px";
 let dotSpace = 30;
 let dotContainer = document.getElementById("dotContainer");
+let backgroundSpace = document.getElementById("backgroundSpace");
+let planets = document.getElementsByClassName("planet");
+let planetInfo = [];// distance left, size
 let objectContainer = document.getElementById("source");
 let dotclass = document.getElementsByClassName("dot");
 let rocket = {
@@ -256,9 +261,42 @@ rocket.positionY = calcRocketPosition(rocket.positionX);
 moveRocket(rocket.positionX, rocket.positionY);
 rotateRocket(5, -rocket.positionY + calcRocketPosition(rocket.positionX + 5))
 updateCards();
+//temporary generating cards
+function addExtraCards(extraTemporaryCards){
+for(let i = 0; i < extraTemporaryCards; ++i){
+    //"<a><div class=\"card\"> <div class=\"levelNumber\">?</div><img src=\"cards/editor.png\"><h3>temporary card</h3></div></a>"
+    let newCard = document.createElement("a");
+    newCard.innerHTML = "<div class=\"card\"> <div class=\"levelNumber\">?</div><img src=\"cards/editor.png\"><h3 style=\"background-color: grey;\">temporary card</h3></div>"
+    document.body.appendChild(newCard);
+
+updateCards();
+}}
+function help(){
+    console.log("\naddExtraCards(amount)\nmoveCardsRight()\nmoveCardsLeft()")
+}
+
+
+
 for(let i = 0; i < card.length; ++i){
     card[i].style.top = 20 + Math.random() * 100 + "px";
 }
+for(let i = 0; i < 16; ++i){// addding background planets
+    planetInfo[i] = []
+    planetInfo[i][0] = parseInt(Math.random() * window.innerWidth * document.getElementsByClassName("card").length / 3)
+    planetInfo[i][1] = parseInt(Math.random() * 20);
+    backgroundSpace.innerHTML += "<div class=\"planet\" style =\"left: " + planetInfo[i][0] + "px\"></div>";
+    planets[planets.length - 1].style.transform = "scale(" + planetInfo[i][1] / 20 + ")"
+    planets[planets.length - 1].style.bottom = parseInt(Math.random() * window.innerHeight) + "px";
+    planets[planets.length - 1].style.filter = "blur(" + (20 - planetInfo[i][1]) + "px)";
+    let planetColor = "#";
+    for(let i = 0; i < 6; ++i){
+        planetColor += parseInt(Math.random() * 9);
+    }
+    planets[planets.length - 1].style.backgroundColor = planetColor;
+}
+
+
+
 function updateCards(){
 	for(let i = 0; i < card.length; ++i){
 	        card[i].style.left = (window.innerWidth - 200) / 3 * (i - cardOrder + 0.5) - 100 + "px";
@@ -271,6 +309,11 @@ function updateCards(){
         }
 	}
 };
+function alignPlanets(){
+    for(let i = 0; i < planets.length; ++i){
+        planets[i].style.left = planetInfo[i][0] - cardOrder * planetInfo[i][1] * 10 + "px";
+    }
+};
 function moveCardsLeft(){
     if(card.length - cardOrder > 6){
         cardOrder += 3;
@@ -279,6 +322,7 @@ function moveCardsLeft(){
     }
     updateCards()
     alignDots(cardOrder);
+    alignPlanets();
 }function moveCardsRight(){
     if(cardOrder > 3){
         cardOrder -= 3;
@@ -287,6 +331,7 @@ function moveCardsLeft(){
     }
     updateCards()
     alignDots(cardOrder);
+    alignPlanets();
 }
 window.addEventListener('mousemove', (e) => {
         rocket.positionX = e.clientX;
@@ -307,8 +352,9 @@ window.addEventListener('wheel', (e) => {
     }else if(e.deltaY < -100 && cardOrder > 0){
         --cardOrder
     }
-    updateCards()
-    alignDots(cardOrder)
+    updateCards();
+    alignDots(cardOrder);
+    alignPlanets();
 });
 /*function moveDots(direction){
     let frame = 0;
