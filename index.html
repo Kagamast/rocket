@@ -84,6 +84,14 @@ body{
     box-shadow: 0 0 20px white;
     border-radius: 100%;
 }
+.skyStar{
+    position: absolute;
+    background-color: #ffffff3a;
+    box-shadow: 0 0 5px 1px rgba(255, 255, 255, 0.637);
+    border-radius: 100%;
+    width: 2px;
+    height: 2px;
+}
 .blackHole{
     position: absolute;
     height: 100px;
@@ -280,14 +288,29 @@ function help(){
 for(let i = 0; i < card.length; ++i){
     card[i].style.top = 20 + Math.random() * 100 + "px";
 }
-for(let i = 0; i < 16; ++i){// addding background planets
+for(let i = 0; i < parseInt(window.innerWidth * window.innerHeight / 10000); ++i){//  adding background stars
+    let newStar = document.createElement("div");
+    newStar.classList.add("skyStar");
+    let starSize = parseInt(Math.random() * 3);
+    newStar.style.height = starSize + "px";
+    newStar.style.width = starSize + "px";
+    newStar.style.bottom = parseInt(Math.random() * window.innerHeight) + "px";
+    newStar.style.left = parseInt(Math.random() * window.innerWidth) + "px";
+    backgroundSpace.appendChild(newStar);
+}
+let planetSize = [];
+for(let i = 0; i < parseInt(window.innerWidth / 200); ++i){// deciding how many planets are created
+    planetSize.push(parseInt(Math.random() * 20));
+}
+planetSize = sortArray(planetSize)
+for(let i = 0; i < planetSize.length; ++i){// addding background planets
     planetInfo[i] = []
     planetInfo[i][0] = parseInt(Math.random() * window.innerWidth * document.getElementsByClassName("card").length / 3)
-    planetInfo[i][1] = parseInt(Math.random() * 20);
+    planetInfo[i][1] = planetSize[i];
     backgroundSpace.innerHTML += "<div class=\"planet\" style =\"left: " + planetInfo[i][0] + "px\"></div>";
     planets[planets.length - 1].style.transform = "scale(" + planetInfo[i][1] / 20 + ")"
     planets[planets.length - 1].style.bottom = parseInt(Math.random() * window.innerHeight) + "px";
-    planets[planets.length - 1].style.filter = "blur(" + (20 - planetInfo[i][1]) + "px)";
+    planets[planets.length - 1].style.filter = "blur(" + (20 - planetInfo[i][1]) * 2 + "px)";
     let planetColor = "#";
     for(let i = 0; i < 6; ++i){
         planetColor += parseInt(Math.random() * 9);
@@ -297,6 +320,28 @@ for(let i = 0; i < 16; ++i){// addding background planets
 
 
 
+function ifMove(arr, index){
+    return arr[index] > arr[index + 1] ? true : false;
+}
+function moveInArray(arr, index){
+    let movingValue = arr[index + 1]
+    arr.splice(index + 1, 1);
+    arr.splice(index, 0, movingValue);
+    return arr;
+}
+function sortArray(arr){
+	let sortingCompletenessIndex = 1;
+	while (sortingCompletenessIndex > 0) {
+	    sortingCompletenessIndex = 0
+	    for(let i = 0; i < arr.length - 1; i++){
+	        if(ifMove(arr, i)){
+	            arr = moveInArray(arr, i);
+	            sortingCompletenessIndex++
+	        }else{}
+	    }
+    }
+    return arr
+}
 function updateCards(){
 	for(let i = 0; i < card.length; ++i){
 	        card[i].style.left = (window.innerWidth - 200) / 3 * (i - cardOrder + 0.5) - 100 + "px";
